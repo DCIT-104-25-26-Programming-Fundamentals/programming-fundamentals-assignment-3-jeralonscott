@@ -81,4 +81,82 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
 
+let tasks = [];
+
+// Shows the menu of options.
+function showMenu() {
+  console.log('\n============================');
+  console.log('     TO-DO LIST MENU');
+  console.log('============================');
+  console.log('1. Add task');
+  console.log('2. View tasks');
+  console.log('3. Delete task');
+  console.log('4. Quit');
+}
+
+// FEATURE 1 — Adds a new task to the list.
+function addTask() {
+  const task = readlineSync.question('Enter task: ');
+  tasks.push(task);
+  console.log('Task added: "' + task + '"');
+}
+
+// FEATURE 2 — Displays every task, numbered from 1.
+function viewTasks() {
+  if (tasks.length === 0) {
+    console.log('You have no tasks yet.');
+    return;
+  }
+
+  console.log('Your Tasks:');
+  for (let i = 0; i < tasks.length; i++) {
+    console.log((i + 1) + '. ' + tasks[i]);
+  }
+}
+
+// FEATURE 3 — Removes a task by its displayed number.
+function deleteTask() {
+  if (tasks.length === 0) {
+    console.log('You have no tasks to delete.');
+    return;
+  }
+
+  viewTasks();
+  const taskNumber = readlineSync.questionInt('Enter task number to delete: ');
+  const index = taskNumber - 1;
+
+  if (index < 0 || index >= tasks.length) {
+    console.log('Error: Invalid task number.');
+    return;
+  }
+
+  const removedTask = tasks[index];
+  tasks.splice(index, 1);
+  console.log('Task "' + removedTask + '" has been removed.');
+}
+
+function main() {
+  let running = true;
+
+  while (running) {
+    showMenu();
+    const choice = readlineSync.questionInt('Enter your choice (1-4): ');
+
+    if (choice === 1) {
+      addTask();
+    } else if (choice === 2) {
+      viewTasks();
+    } else if (choice === 3) {
+      deleteTask();
+    } else if (choice === 4) {
+      console.log('Goodbye!');
+      running = false;
+    } else {
+      console.log('Error: Please enter a number between 1 and 4.');
+    }
+  }
+}
+
+main();

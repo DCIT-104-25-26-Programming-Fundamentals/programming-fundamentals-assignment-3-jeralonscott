@@ -43,4 +43,65 @@
 // YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
+const readlineSync = require('readline-sync');
 
+// Adds up every number in the array.
+function calculateSum(numbers) {
+  let sum = 0;
+  for (let i = 0; i < numbers.length; i++) {
+    sum = sum + numbers[i];
+  }
+  return sum;
+}
+
+// Finds the average (mean) of the numbers in the array.
+function calculateAverage(numbers) {
+  const sum = calculateSum(numbers);
+  return sum / numbers.length;
+}
+
+// Finds the largest number in the array.
+function findMax(numbers) {
+  let max = numbers[0];
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] > max) {
+      max = numbers[i];
+    }
+  }
+  return max;
+}
+
+// Finds the smallest number in the array.
+function findMin(numbers) {
+  let min = numbers[0];
+  for (let i = 1; i < numbers.length; i++) {
+    if (numbers[i] < min) {
+      min = numbers[i];
+    }
+  }
+  return min;
+}
+
+function main() {
+  const count = readlineSync.questionInt('How many numbers? ');
+
+  if (count <= 0) {
+    console.log('Error: Please enter a positive number of values.');
+    return;
+  }
+
+  const numbers = [];
+  for (let i = 0; i < count; i++) {
+    const value = readlineSync.questionInt('Enter number ' + (i + 1) + ': ');
+    numbers.push(value);
+  }
+
+  console.log('');
+  console.log('Results:');
+  console.log('Sum:     ' + calculateSum(numbers));
+  console.log('Average: ' + calculateAverage(numbers));
+  console.log('Maximum: ' + findMax(numbers));
+  console.log('Minimum: ' + findMin(numbers));
+}
+
+main();
