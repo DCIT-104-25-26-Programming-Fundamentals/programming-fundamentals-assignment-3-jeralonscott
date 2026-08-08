@@ -53,19 +53,33 @@
 //   print an error message and stop.
 // - Each part must be in its own function (see scaffold below).
 // - Complete Part A before attempting Part B.
-
 //
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
 
+// Reads a positive integer, printing an error and returning null if the
+// value entered isn't positive. Keeps the "must be positive" check in one
+// place instead of repeating it after every prompt.
+function askPositiveInt(prompt) {
+  const value = readlineSync.questionInt(prompt);
+
+  if (value <= 0) {
+    console.log('Error: Please enter a positive number.');
+    return null;
+  }
+
+  return value;
+}
+
 // PART A — Prints the multiplication table for a single number, 1 to 12.
+// Right-pads the factor so results line up even once the product hits
+// double digits.
 function printTable(number) {
   console.log('Multiplication Table for ' + number + ':');
   for (let i = 1; i <= 12; i++) {
-    console.log(number + '  x  ' + i + '  =  ' + (number * i));
+    const factor = String(i).padEnd(2);
+    console.log(number + '  x  ' + factor + '  =  ' + (number * i));
   }
 }
 
@@ -79,20 +93,16 @@ function printTablesUpTo(n) {
 
 function main() {
   // ----- PART A -----
-  const number = readlineSync.questionInt('Enter a number: ');
-
-  if (number <= 0) {
-    console.log('Error: Please enter a positive number.');
+  const number = askPositiveInt('Enter a number: ');
+  if (number === null) {
     return;
   }
 
   printTable(number);
 
   // ----- PART B (Bonus) -----
-  const n = readlineSync.questionInt('\nEnter N to print tables from 1 to N: ');
-
-  if (n <= 0) {
-    console.log('Error: Please enter a positive number.');
+  const n = askPositiveInt('\nEnter N to print tables from 1 to N: ');
+  if (n === null) {
     return;
   }
 

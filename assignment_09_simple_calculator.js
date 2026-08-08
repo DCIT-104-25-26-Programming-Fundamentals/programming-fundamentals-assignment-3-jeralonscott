@@ -68,10 +68,6 @@
 // - Display results to 2 decimal places using .toFixed(2).
 // - Handle invalid menu choices gracefully.
 //
-
-//
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -107,6 +103,17 @@ function power(a, b) {
   return a ** b;
 }
 
+// Maps each menu choice to its symbol and function, so main() doesn't need
+// a long if/else-if chain to dispatch on the choice.
+const OPERATIONS = {
+  1: { symbol: '+', fn: add },
+  2: { symbol: '-', fn: subtract },
+  3: { symbol: '*', fn: multiply },
+  4: { symbol: '/', fn: divide },
+  5: { symbol: '%', fn: modulus },
+  6: { symbol: '**', fn: power },
+};
+
 function showMenu() {
   console.log('\n============================');
   console.log('     SIMPLE CALCULATOR');
@@ -133,40 +140,20 @@ function main() {
       continue;
     }
 
-    if (choice < 1 || choice > 7) {
+    const operation = OPERATIONS[choice];
+    if (!operation) {
       console.log('Error: Please enter a number between 1 and 7.');
       continue;
     }
 
     const a = readlineSync.questionFloat('Enter first number : ');
     const b = readlineSync.questionFloat('Enter second number: ');
-    let result;
-    let symbol;
-
-    if (choice === 1) {
-      result = add(a, b);
-      symbol = '+';
-    } else if (choice === 2) {
-      result = subtract(a, b);
-      symbol = '-';
-    } else if (choice === 3) {
-      result = multiply(a, b);
-      symbol = '*';
-    } else if (choice === 4) {
-      result = divide(a, b);
-      symbol = '/';
-    } else if (choice === 5) {
-      result = modulus(a, b);
-      symbol = '%';
-    } else if (choice === 6) {
-      result = power(a, b);
-      symbol = '**';
-    }
+    const result = operation.fn(a, b);
 
     if (result === null) {
       console.log('Error: Cannot divide by zero.');
     } else {
-      console.log('Result: ' + a + ' ' + symbol + ' ' + b + ' = ' + result.toFixed(2));
+      console.log('Result: ' + a + ' ' + operation.symbol + ' ' + b + ' = ' + result.toFixed(2));
     }
   }
 }

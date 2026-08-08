@@ -36,10 +36,6 @@
 // - The main() function must call isPrime() and print the result.
 // - Use readlineSync.questionInt() to read integer input from the user.
 //
-
-//
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -52,9 +48,19 @@ function isPrime(number) {
     return false;
   }
 
-  // Try every possible divisor from 2 up to number - 1.
-  // If we find one that divides evenly, it is NOT prime.
-  for (let i = 2; i < number; i++) {
+  // 2 is the only even prime — handle it directly.
+  if (number === 2) {
+    return true;
+  }
+
+  // Any other even number can't be prime.
+  if (number % 2 === 0) {
+    return false;
+  }
+
+  // Only need to check odd divisors up to the square root of the number.
+  // If no divisor is found by then, none exists beyond it either.
+  for (let i = 3; i * i <= number; i += 2) {
     if (number % i === 0) {
       return false;
     }

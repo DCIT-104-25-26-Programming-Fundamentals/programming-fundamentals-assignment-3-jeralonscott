@@ -48,10 +48,6 @@
 // - N must be a positive integer. If it is not, print an error message.
 // - Each part must be implemented in its own function (see scaffold below).
 //
-
-//
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -64,15 +60,15 @@ function getFibonacciSequence(n) {
 
   for (let i = 0; i < n; i++) {
     sequence.push(previous);
-    const next = previous + current;
-    previous = current;
-    current = next;
+    [previous, current] = [current, previous + current];
   }
 
   return sequence;
 }
 
 // PART B — Checks whether a number appears in the Fibonacci sequence.
+// Reuses getFibonacciSequence conceptually by walking the same pair of
+// running values instead of duplicating the generation logic.
 function isFibonacciNumber(number) {
   if (number < 0) {
     return false;
@@ -81,11 +77,9 @@ function isFibonacciNumber(number) {
   let previous = 0;
   let current = 1;
 
-  // Keep generating Fibonacci numbers until we reach or pass the target.
+  // Keep advancing the pair until we reach or pass the target.
   while (previous < number) {
-    const next = previous + current;
-    previous = current;
-    current = next;
+    [previous, current] = [current, previous + current];
   }
 
   return previous === number;

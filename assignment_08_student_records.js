@@ -79,9 +79,6 @@
 // - Each feature MUST be in its own function (see scaffold below).
 // - Handle invalid menu choices and missing student IDs gracefully.
 //
-
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -102,27 +99,37 @@ function showMenu() {
 // Works out the average of an array of scores.
 function calculateAverage(scores) {
   let sum = 0;
-  for (let i = 0; i < scores.length; i++) {
-    sum = sum + scores[i];
+  for (const score of scores) {
+    sum += score;
   }
   return sum / scores.length;
+}
+
+// Finds a student by ID, or returns undefined if none matches.
+// Both calculateStudentAverage() and any future lookup feature can share
+// this instead of re-writing the search loop.
+function findStudentById(id) {
+  return students.find((student) => student.id === id);
 }
 
 // FEATURE 1 — Asks for a student's details and adds them to the array.
 function addStudent() {
   const name = readlineSync.question('Student name: ');
   const id = readlineSync.questionInt('Student ID: ');
-  const numScores = readlineSync.questionInt('How many scores? ');
 
+  if (findStudentById(id)) {
+    console.log('Error: A student with that ID already exists.');
+    return;
+  }
+
+  const numScores = readlineSync.questionInt('How many scores? ');
   const scores = [];
   for (let i = 0; i < numScores; i++) {
     const score = readlineSync.questionInt('Enter score ' + (i + 1) + ': ');
     scores.push(score);
   }
 
-  const student = { name: name, id: id, scores: scores };
-  students.push(student);
-
+  students.push({ name, id, scores });
   console.log('Student "' + name + '" added successfully.');
 }
 
@@ -133,8 +140,7 @@ function displayAllStudents() {
     return;
   }
 
-  for (let i = 0; i < students.length; i++) {
-    const student = students[i];
+  for (const student of students) {
     const average = calculateAverage(student.scores);
 
     console.log('----------------------------');
@@ -149,17 +155,24 @@ function displayAllStudents() {
 // FEATURE 3 — Looks up a student by ID and prints their average score.
 function calculateStudentAverage() {
   const id = readlineSync.questionInt('Enter student ID: ');
+  const student = findStudentById(id);
 
-  for (let i = 0; i < students.length; i++) {
-    if (students[i].id === id) {
-      const average = calculateAverage(students[i].scores);
-      console.log(students[i].name + "'s average score: " + average.toFixed(2));
-      return;
-    }
+  if (!student) {
+    console.log('Error: No student found with that ID.');
+    return;
   }
 
-  console.log('Error: No student found with that ID.');
+  const average = calculateAverage(student.scores);
+  console.log(student.name + "'s average score: " + average.toFixed(2));
 }
+
+// Maps menu choices to their handler functions, keeping main() free of a
+// long if/else-if chain.
+const MENU_ACTIONS = {
+  1: addStudent,
+  2: displayAllStudents,
+  3: calculateStudentAverage,
+};
 
 function main() {
   let running = true;
@@ -168,15 +181,11 @@ function main() {
     showMenu();
     const choice = readlineSync.questionInt('Enter your choice (1-4): ');
 
-    if (choice === 1) {
-      addStudent();
-    } else if (choice === 2) {
-      displayAllStudents();
-    } else if (choice === 3) {
-      calculateStudentAverage();
-    } else if (choice === 4) {
+    if (choice === 4) {
       console.log('Goodbye!');
       running = false;
+    } else if (MENU_ACTIONS[choice]) {
+      MENU_ACTIONS[choice]();
     } else {
       console.log('Error: Please enter a number between 1 and 4.');
     }

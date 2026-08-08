@@ -63,9 +63,6 @@
 // - Display each matrix in a neat, aligned grid format.
 // - Tip: Complete Part A first, then Parts B and C.
 //
-
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in 
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -78,21 +75,28 @@ function readMatrix(rows, cols, label) {
 
   for (let i = 0; i < rows; i++) {
     const line = readlineSync.question('Enter row ' + (i + 1) + ': ');
-    const row = line.trim().split(' ').map(Number);
+    const row = line.trim().split(/\s+/).map(Number);
     matrix.push(row);
   }
 
   return matrix;
 }
 
-// Prints a matrix in a neat, aligned grid.
+// Prints a matrix in a neat, aligned grid. Columns are padded to the width
+// of the longest value in that column so numbers line up vertically.
 function printMatrix(matrix) {
-  for (let i = 0; i < matrix.length; i++) {
-    let line = '';
-    for (let j = 0; j < matrix[i].length; j++) {
-      line = line + matrix[i][j] + '\t';
+  const cols = matrix[0].length;
+  const colWidths = new Array(cols).fill(0);
+
+  for (const row of matrix) {
+    for (let j = 0; j < cols; j++) {
+      colWidths[j] = Math.max(colWidths[j], String(row[j]).length);
     }
-    console.log(line);
+  }
+
+  for (const row of matrix) {
+    const cells = row.map((value, j) => String(value).padStart(colWidths[j]));
+    console.log(cells.join('  '));
   }
 }
 
@@ -143,7 +147,7 @@ function multiplyMatrices(matrixA, matrixB) {
     for (let j = 0; j < colsB; j++) {
       let sum = 0;
       for (let k = 0; k < colsA; k++) {
-        sum = sum + matrixA[i][k] * matrixB[k][j];
+        sum += matrixA[i][k] * matrixB[k][j];
       }
       newRow.push(sum);
     }
@@ -187,6 +191,5 @@ function main() {
   console.log('\nProduct of A x B:');
   printMatrix(multiplyMatrices(matrixM, matrixN));
 }
- 
-main();
 
+main();

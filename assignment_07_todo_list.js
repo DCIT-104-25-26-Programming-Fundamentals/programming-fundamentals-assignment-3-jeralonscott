@@ -76,9 +76,6 @@
 // - Handle invalid menu choices gracefully (print an error, do not crash).
 // - To remove an item from an array by index, use: tasks.splice(index, 1)
 //
-//
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -97,8 +94,15 @@ function showMenu() {
 }
 
 // FEATURE 1 — Adds a new task to the list.
+// Rejects blank input so the list doesn't fill up with empty entries.
 function addTask() {
-  const task = readlineSync.question('Enter task: ');
+  const task = readlineSync.question('Enter task: ').trim();
+
+  if (task === '') {
+    console.log('Error: Task cannot be empty.');
+    return;
+  }
+
   tasks.push(task);
   console.log('Task added: "' + task + '"');
 }
@@ -111,9 +115,9 @@ function viewTasks() {
   }
 
   console.log('Your Tasks:');
-  for (let i = 0; i < tasks.length; i++) {
-    console.log((i + 1) + '. ' + tasks[i]);
-  }
+  tasks.forEach((task, i) => {
+    console.log((i + 1) + '. ' + task);
+  });
 }
 
 // FEATURE 3 — Removes a task by its displayed number.
@@ -132,10 +136,17 @@ function deleteTask() {
     return;
   }
 
-  const removedTask = tasks[index];
-  tasks.splice(index, 1);
+  const [removedTask] = tasks.splice(index, 1);
   console.log('Task "' + removedTask + '" has been removed.');
 }
+
+// Maps menu choices to their handler functions, keeping main() free of a
+// long if/else-if chain.
+const MENU_ACTIONS = {
+  1: addTask,
+  2: viewTasks,
+  3: deleteTask,
+};
 
 function main() {
   let running = true;
@@ -144,15 +155,11 @@ function main() {
     showMenu();
     const choice = readlineSync.questionInt('Enter your choice (1-4): ');
 
-    if (choice === 1) {
-      addTask();
-    } else if (choice === 2) {
-      viewTasks();
-    } else if (choice === 3) {
-      deleteTask();
-    } else if (choice === 4) {
+    if (choice === 4) {
       console.log('Goodbye!');
       running = false;
+    } else if (MENU_ACTIONS[choice]) {
+      MENU_ACTIONS[choice]();
     } else {
       console.log('Error: Please enter a number between 1 and 4.');
     }

@@ -40,46 +40,39 @@
 //   print an error message and stop.
 //
 // =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
-// =============================================================================
 
 const readlineSync = require('readline-sync');
 
 // Adds up every number in the array.
 function calculateSum(numbers) {
   let sum = 0;
-  for (let i = 0; i < numbers.length; i++) {
-    sum = sum + numbers[i];
+  for (const value of numbers) {
+    sum += value;
   }
   return sum;
 }
 
 // Finds the average (mean) of the numbers in the array.
 function calculateAverage(numbers) {
-  const sum = calculateSum(numbers);
-  return sum / numbers.length;
+  return calculateSum(numbers) / numbers.length;
 }
 
-// Finds the largest number in the array.
-function findMax(numbers) {
-  let max = numbers[0];
-  for (let i = 1; i < numbers.length; i++) {
-    if (numbers[i] > max) {
-      max = numbers[i];
-    }
-  }
-  return max;
-}
-
-// Finds the smallest number in the array.
-function findMin(numbers) {
+// Finds the largest and smallest numbers in a single pass and
+// returns them together, so callers don't have to scan the array twice.
+function findMinAndMax(numbers) {
   let min = numbers[0];
-  for (let i = 1; i < numbers.length; i++) {
-    if (numbers[i] < min) {
-      min = numbers[i];
+  let max = numbers[0];
+
+  for (const value of numbers) {
+    if (value > max) {
+      max = value;
+    }
+    if (value < min) {
+      min = value;
     }
   }
-  return min;
+
+  return { min, max };
 }
 
 function main() {
@@ -96,12 +89,14 @@ function main() {
     numbers.push(value);
   }
 
+  const { min, max } = findMinAndMax(numbers);
+
   console.log('');
   console.log('Results:');
   console.log('Sum:     ' + calculateSum(numbers));
   console.log('Average: ' + calculateAverage(numbers));
-  console.log('Maximum: ' + findMax(numbers));
-  console.log('Minimum: ' + findMin(numbers));
+  console.log('Maximum: ' + max);
+  console.log('Minimum: ' + min);
 }
 
 main();

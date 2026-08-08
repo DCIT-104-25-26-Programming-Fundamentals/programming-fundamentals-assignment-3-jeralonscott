@@ -44,12 +44,20 @@
 //   and let main() print the error message.
 // - Use if / else if / else to determine the grade.
 //
-
-// =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
 // =============================================================================
 
 const readlineSync = require('readline-sync');
+
+// Grade cutoffs, ordered from highest to lowest.
+// Keeping this as data (instead of a long if/else chain) makes it easy
+// to add or adjust grade bands later.
+const GRADE_BANDS = [
+  { min: 80, letter: 'A' },
+  { min: 70, letter: 'B' },
+  { min: 60, letter: 'C' },
+  { min: 50, letter: 'D' },
+  { min: 0,  letter: 'F' },
+];
 
 // Works out the letter grade for a score.
 // Returns null if the score is not between 0 and 100.
@@ -58,17 +66,14 @@ function getGrade(score) {
     return null;
   }
 
-  if (score >= 80) {
-    return 'A';
-  } else if (score >= 70) {
-    return 'B';
-  } else if (score >= 60) {
-    return 'C';
-  } else if (score >= 50) {
-    return 'D';
-  } else {
-    return 'F';
+  for (const band of GRADE_BANDS) {
+    if (score >= band.min) {
+      return band.letter;
+    }
   }
+
+  // Should be unreachable, since GRADE_BANDS bottoms out at 0.
+  return null;
 }
 
 function main() {
