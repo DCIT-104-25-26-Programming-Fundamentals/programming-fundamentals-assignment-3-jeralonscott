@@ -65,7 +65,7 @@
 //
 
 // =============================================================================
-// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in
+// YOUR CODE BELOW — remove the // symbols from the scaffold and fill it in 
 // =============================================================================
 
 const readlineSync = require('readline-sync');
@@ -187,6 +187,6 @@ function main() {
   console.log('\nProduct of A x B:');
   printMatrix(multiplyMatrices(matrixM, matrixN));
 }
-
+ 
 main();
 
